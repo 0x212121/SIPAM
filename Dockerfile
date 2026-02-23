@@ -60,5 +60,9 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 RUN mkdir -p /var/www/html/storage/app/evidence_originals /var/www/html/storage/app/evidence_derivatives \
     && chown -R www-data:www-data /var/www/html/storage/app
 
+# Copy entrypoint script
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
 EXPOSE 9000
 CMD ["php-fpm"]
