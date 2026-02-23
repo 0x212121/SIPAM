@@ -26,8 +26,12 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     pcntl \
     bcmath
 
-# Install Redis extension
-RUN pecl install redis && docker-php-ext-enable redis
+# Install Redis extension (requires build deps on Alpine)
+RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
+    && pecl channel-update pecl.php.net \
+    && printf "\n" | pecl install redis-6.0.2 \
+    && docker-php-ext-enable redis \
+    && apk del .build-deps
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
