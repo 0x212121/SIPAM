@@ -15,6 +15,11 @@ mkdir -p /var/www/html/bootstrap/cache
 chmod -R 777 /var/www/html/storage
 chmod -R 777 /var/www/html/bootstrap/cache
 
+# If command is artisan or php, run it directly
+if [ "$1" = "php" ] || [ "$1" = "artisan" ] || [ "$1" = "php-fpm" ]; then
+    exec "$@"
+fi
+
 # Generate APP_KEY if not set
 if [ -z "$APP_KEY" ]; then
     if ! grep -q "^APP_KEY=" /var/www/html/.env || grep -q "^APP_KEY=$" /var/www/html/.env; then
@@ -23,9 +28,5 @@ if [ -z "$APP_KEY" ]; then
     fi
 fi
 
-# Clear and cache config (optional, untuk production bisa di-enable)
-# cd /var/www/html && php artisan config:cache --quiet 2>/dev/null || true
-# cd /var/www/html && php artisan view:cache --quiet 2>/dev/null || true
-
-# Start PHP-FPM
+# Default: start PHP-FPM
 exec php-fpm
