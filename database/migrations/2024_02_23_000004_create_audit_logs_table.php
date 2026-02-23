@@ -18,7 +18,6 @@ return new class extends Migration
             $table->foreignId('actor_user_id')->constrained('users');
             $table->timestamps();
 
-            $table->index(['entity_type', 'entity_id']);
             $table->index('created_at');
         });
     }
