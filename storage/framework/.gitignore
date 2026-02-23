@@ -1,0 +1,9 @@
+compiled.php
+config.php
+down
+events.scanned.php
+maintenance.php
+routes.scanned.php
+translations/
+*.php
+*.txt
