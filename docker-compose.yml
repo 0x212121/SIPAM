@@ -9,6 +9,7 @@ services:
     working_dir: /var/www/html
     volumes:
       - .:/var/www/html
+      - vendor:/var/www/html/vendor
       - ./storage/app/evidence_originals:/var/www/html/storage/app/evidence_originals
       - ./storage/app/evidence_derivatives:/var/www/html/storage/app/evidence_derivatives
     networks:
@@ -68,6 +69,7 @@ services:
     command: php artisan queue:work --sleep=3 --tries=3 --max-time=3600
     volumes:
       - .:/var/www/html
+      - vendor:/var/www/html/vendor
       - ./storage/app/evidence_originals:/var/www/html/storage/app/evidence_originals
       - ./storage/app/evidence_derivatives:/var/www/html/storage/app/evidence_derivatives
     networks:
@@ -91,3 +93,4 @@ networks:
 
 volumes:
   postgres_data:
+  vendor:
