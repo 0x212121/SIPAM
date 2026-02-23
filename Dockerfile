@@ -27,13 +27,11 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     bcmath
 
 # Install Redis extension (requires build deps on Alpine)
-# Install Redis extension (Alpine)
 RUN set -eux; \
-    apk add --no-cache ca-certificates; \
-    update-ca-certificates; \
-    apk add --no-cache --virtual .build-deps $PHPIZE_DEPS linux-headers openssl-dev zlib-dev; \
+    apk add --no-cache ca-certificates; update-ca-certificates; \
+    apk add --no-cache --virtual .build-deps $PHPIZE_DEPS linux-headers; \
     pecl channel-update pecl.php.net; \
-    printf "\n" | pecl install redis-6.0.2; \
+    printf "\n" | pecl install redis; \
     docker-php-ext-enable redis; \
     apk del .build-deps
 
