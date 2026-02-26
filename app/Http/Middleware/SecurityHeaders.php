@@ -12,12 +12,12 @@ class SecurityHeaders
     {
         $response = $next($request);
 
-        // Add CSP header to allow Cloudflare Insights
+        // Add CSP header to allow Cloudflare Insights and Leaflet from unpkg
         $csp = "default-src 'self'; " .
-               "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; " .
+               "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://unpkg.com; " .
+               "style-src 'self' 'unsafe-inline' https://unpkg.com; " .
                "connect-src 'self' https://cloudflareinsights.com; " .
-               "img-src 'self' data: blob:; " .
-               "style-src 'self' 'unsafe-inline';";
+               "img-src 'self' data: blob: https://*.tile.openstreetmap.org;";
 
         $response->headers->set('Content-Security-Policy', $csp);
         
