@@ -216,11 +216,33 @@ function initMap() {
 }
 
 function loadPhotos() {
-    fetch('/api/projects/{{ $project->id }}/photos')
-        .then(r => r.json())
+    fetch('{{ url('/api/projects/' . $project->id . '/photos') }}', {
+        credentials: 'same-origin',
+        headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+        .then(r => {
+            if (!r.ok) {
+                throw new Error('HTTP ' + r.status + ': ' + r.statusText);
+            }
+            const contentType = r.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                return r.text().then(text => {
+                    console.error('Non-JSON response:', text.substring(0, 500));
+                    throw new Error('Expected JSON but got ' + (contentType || 'unknown'));
+                });
+            }
+            return r.json();
+        })
         .then(data => {
             photosData = data;
             loadMap();
+        })
+        .catch(err => {
+            console.error('Failed to load photos:', err);
+            document.getElementById('map').innerHTML = '<p style="padding: 20px; color: #e74c3c;">Error loading photos. Please refresh the page.</p>';
         });
 }
 
@@ -279,8 +301,17 @@ function loadGallery() {
 
 function loadAuditLog() {
     const container = document.getElementById('audit-log-content');
-    fetch('/api/projects/{{ $project->id }}/audit-logs')
-        .then(r => r.json())
+    fetch('{{ url('/api/projects/' . $project->id . '/audit-logs') }}', {
+        credentials: 'same-origin',
+        headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+        .then(r => {
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            return r.json();
+        })
         .then(logs => {
             if (!logs.length) {
                 container.innerHTML = '<p>No audit log entries.</p>';
@@ -298,6 +329,10 @@ function loadAuditLog() {
             });
             html += '</tbody></table>';
             container.innerHTML = html;
+        })
+        .catch(err => {
+            console.error('Failed to load audit logs:', err);
+            container.innerHTML = '<p style="color: #e74c3c;">Error loading audit logs.</p>';
         });
 }
 

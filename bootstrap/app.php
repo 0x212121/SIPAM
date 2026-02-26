@@ -28,5 +28,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        // Return JSON for API authentication failures
+        $exceptions->render(function (\Illuminate\Auth\AuthenticationException $e, $request) {
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json(['error' => 'Unauthenticated.'], 401);
+            }
+        });
     })->create();
