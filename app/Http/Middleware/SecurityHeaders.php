@@ -12,14 +12,15 @@ class SecurityHeaders
     {
         $response = $next($request);
 
-        // Add CSP header to allow Cloudflare Insights and Leaflet from unpkg
-        $csp = "default-src 'self'; " .
-               "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://unpkg.com; " .
-               "style-src 'self' 'unsafe-inline' https://unpkg.com; " .
-               "connect-src 'self' https://cloudflareinsights.com http://unraid.iwlab.web.id https://unraid.iwlab.web.id; " .
-               "img-src 'self' data: blob: https://*.tile.openstreetmap.org;";
-
-        $response->headers->set('Content-Security-Policy', $csp);
+        // CSP - Nonaktif untuk development, aktifkan untuk production
+        if (app()->environment('production')) {
+            $csp = "default-src 'self'; " .
+                   "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://unpkg.com; " .
+                   "style-src 'self' 'unsafe-inline' https://unpkg.com; " .
+                   "connect-src 'self' https://cloudflareinsights.com; " .
+                   "img-src 'self' data: blob: https://*.tile.openstreetmap.org;";
+            $response->headers->set('Content-Security-Policy', $csp);
+        }
         
         // Add CORS headers
         $response->headers->set('Access-Control-Allow-Origin', '*');

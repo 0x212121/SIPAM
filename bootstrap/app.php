@@ -18,6 +18,12 @@ return Application::configure(basePath: dirname(__DIR__))
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
         ]);
         
+        // Trust all proxies (for reverse proxy setups like Unraid)
+        $middleware->trustProxies(at: '*');
+        
+        // Force HTTPS in production
+        $middleware->append(\App\Http\Middleware\ForceHttps::class);
+        
         // Add security headers middleware globally
         $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
     })
