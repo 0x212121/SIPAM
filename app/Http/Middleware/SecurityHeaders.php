@@ -16,7 +16,7 @@ class SecurityHeaders
         $csp = "default-src 'self'; " .
                "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://unpkg.com; " .
                "style-src 'self' 'unsafe-inline' https://unpkg.com; " .
-               "connect-src 'self' https://cloudflareinsights.com; " .
+               "connect-src 'self' https://cloudflareinsights.com http://unraid.iwlab.web.id https://unraid.iwlab.web.id; " .
                "img-src 'self' data: blob: https://*.tile.openstreetmap.org;";
 
         $response->headers->set('Content-Security-Policy', $csp);
